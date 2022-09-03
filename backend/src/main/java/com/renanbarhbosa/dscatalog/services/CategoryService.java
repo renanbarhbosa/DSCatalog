@@ -1,11 +1,14 @@
 package com.renanbarhbosa.dscatalog.services;
 
+import com.renanbarhbosa.dscatalog.dto.CategoryDTO;
 import com.renanbarhbosa.dscatalog.entities.Category;
 import com.renanbarhbosa.dscatalog.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -13,7 +16,9 @@ public class CategoryService {
     @Autowired
     private CategoryRepository repository;
 
-    public List<Category> findAll() {
-        return repository.findAll();
+    @Transactional(readOnly = true)
+    public List<CategoryDTO> findAll() {
+        List<Category> list = repository.findAll();
+        return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
     }
 }
