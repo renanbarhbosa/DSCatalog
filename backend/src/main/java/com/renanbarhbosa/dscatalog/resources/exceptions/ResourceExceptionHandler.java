@@ -1,24 +1,19 @@
 package com.renanbarhbosa.dscatalog.resources.exceptions;
 
-import com.renanbarhbosa.dscatalog.dto.CategoryDTO;
-import com.renanbarhbosa.dscatalog.services.exceptions.EntityNotFoundException;
+import com.renanbarhbosa.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
 import java.time.Instant;
 
 @ControllerAdvice
 public class ResourceExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException e,
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<StandardError> entityNotFound(ResourceNotFoundException e,
                                                         HttpServletRequest request) {
         StandardError err = new StandardError();
         err.setTimeStamp(Instant.now());
