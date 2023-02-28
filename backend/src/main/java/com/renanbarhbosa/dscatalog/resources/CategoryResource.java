@@ -26,7 +26,8 @@ public class CategoryResource {
             @RequestParam(value = "direction", defaultValue = "ASC") String direction,
             @RequestParam(value = "orderBy", defaultValue = "name") String orderBy
     ) {
-        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction),
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage,
+                Sort.Direction.valueOf(direction),
                 orderBy);
         Page<CategoryDTO> list = service.findAllPaged(pageRequest);
         return ResponseEntity.ok().body(list);
@@ -41,7 +42,8 @@ public class CategoryResource {
     @PostMapping
     public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) {
         dto = service.insert(dto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId())
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").
+                buildAndExpand(dto.getId())
                 .toUri();
         return ResponseEntity.created(uri).body(dto);
     }

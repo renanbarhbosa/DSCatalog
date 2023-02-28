@@ -1,5 +1,6 @@
 package com.renanbarhbosa.dscatalog.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.renanbarhbosa.dscatalog.entities.Category;
 
 import java.io.Serializable;
@@ -8,6 +9,7 @@ public class CategoryDTO implements Serializable {
     private static final long serialVersion = 1L;
 
     private Long id;
+
     private String name;
 
     public CategoryDTO() {

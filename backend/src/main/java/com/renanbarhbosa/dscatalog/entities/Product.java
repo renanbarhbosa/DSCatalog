@@ -32,7 +32,8 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(Long id, String name, String description, Double price, String imgUrl, Instant date) {
+    public Product(Long id, String name, String description, Double price, String imgUrl,
+                   Instant date) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -107,7 +108,8 @@ public class Product implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDescription(), getPrice(), getImgUrl(), getDate(),
+        return Objects.hash(getId(), getName(), getDescription(), getPrice(), getImgUrl(),
+                getDate(),
                 getCategories());
     }
 }

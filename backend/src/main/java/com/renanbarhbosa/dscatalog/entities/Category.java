@@ -68,11 +68,14 @@ public class Category implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Category)) return false;
         Category category = (Category) o;
-        return Objects.equals(getId(), category.getId()) && Objects.equals(getName(), category.getName());
+        return getId().equals(category.getId()) && getName().equals(category.getName()) &&
+                getCreatedAt().equals(category.getCreatedAt()) &&
+                getUpdatedAt().equals(category.getUpdatedAt());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName());
+        return Objects.hash(getId(), getName(), getCreatedAt(),
+                getUpdatedAt());
     }
 }
