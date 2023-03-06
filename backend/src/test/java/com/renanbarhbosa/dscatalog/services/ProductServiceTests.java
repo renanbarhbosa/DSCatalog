@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -31,10 +30,10 @@ import static org.mockito.Mockito.*;
 public class ProductServiceTests {
 
     @InjectMocks
-    private ProductService service;
+    private ProductService productService;
 
     @Mock
-    private ProductRepository repository;
+    private ProductRepository productRepository;
 
     private long existingId;
     private long nonExistingId;
@@ -53,81 +52,86 @@ public class ProductServiceTests {
 
         page = new PageImpl<>(List.of(product));
 
-        when(repository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
+        when(productRepository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
 
-        when(repository.save(ArgumentMatchers.any())).thenReturn(product);
+        when(productRepository.save(ArgumentMatchers.any())).thenReturn(product);
 
-        when(repository.findById(existingId)).thenReturn(Optional.of(product));
+        when(productRepository.findById(existingId)).thenReturn(Optional.of(product));
 
-        when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
+        when(productRepository.findById(nonExistingId)).thenReturn(Optional.empty());
 
-        doNothing().when(repository).deleteById(existingId);
+        when(productRepository.getReferenceById(existingId)).thenReturn(product);
+
+        when(productRepository.getReferenceById(nonExistingId))
+                .thenThrow(new ResourceNotFoundException("Product not found."));
+
+        doNothing().when(productRepository).deleteById(existingId);
 
         doThrow(EmptyResultDataAccessException.class)
-                .when(repository).deleteById(nonExistingId);
+                .when(productRepository).deleteById(nonExistingId);
 
         doThrow(DataIntegrityViolationException.class)
-                .when(repository).deleteById(dependentId);
+                .when(productRepository).deleteById(dependentId);
     }
 
     @Test
     public void findAllPagedShouldReturnPage() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<ProductDTO> result = service.findAllPaged(pageable);
+        Page<ProductDTO> result = productService.findAllPaged(pageable);
         Assertions.assertNotNull(result);
-        verify(repository, times(1)).findAll(pageable);
+        verify(productRepository, times(1)).findAll(pageable);
     }
 
     @Test
     public void findByIdShouldReturnProductDTOWhenIdExists() {
-        ProductDTO res = service.findById(existingId);
+        ProductDTO res = productService.findById(existingId);
         Assertions.assertNotNull(res);
-        verify(repository, times(1)).findById(existingId);
-    }
-
-    @Test
-    public void updateShouldReturnProductDTOWhenIdExists() {
-        
-    }
-
-    @Test
-    public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
-
+        verify(productRepository, times(1)).findById(existingId);
     }
 
     @Test
     public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            service.findById(nonExistingId);
+            productService.findById(nonExistingId);
         });
-        verify(repository, times(1))
+        verify(productRepository, times(1))
                 .findById(nonExistingId);
+    }
+
+    @Test
+    public void updateShouldReturnProductDTOWhenIdExists() {
+        ProductDTO productDTO = Factory.createProductDTO();
+        ProductDTO res = productService.update(existingId, productDTO);
+        Assertions.assertNotNull(res);
+    }
+    @Test
+    public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
     }
 
     @Test
     public void deleteShouldDoNothingWhenIdExists() {
         Assertions.assertDoesNotThrow(() -> {
-            service.delete(existingId);
+            productService.delete(existingId);
         });
-        verify(repository, times(1))
+        verify(productRepository, times(1))
                 .deleteById(existingId);
     }
 
     @Test
     public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            service.delete(nonExistingId);
+            productService.delete(nonExistingId);
         });
-        verify(repository, times(1))
+        verify(productRepository, times(1))
                 .deleteById(nonExistingId);
     }
 
     @Test
     public void deleteShouldThrowDatabaseExceptionWhenDependantId() {
         Assertions.assertThrows(DatabaseException.class, () -> {
-            service.delete(dependentId);
+            productService.delete(dependentId);
         });
-        verify(repository, times(1))
+        verify(productRepository, times(1))
                 .deleteById(dependentId);
     }
 }
