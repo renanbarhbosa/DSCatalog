@@ -2,6 +2,7 @@ package com.renanbarhbosa.dscatalog.services;
 
 import com.renanbarhbosa.dscatalog.dto.ProductDTO;
 import com.renanbarhbosa.dscatalog.entities.Product;
+import com.renanbarhbosa.dscatalog.repositories.CategoryRepository;
 import com.renanbarhbosa.dscatalog.repositories.ProductRepository;
 import com.renanbarhbosa.dscatalog.services.exceptions.DatabaseException;
 import com.renanbarhbosa.dscatalog.services.exceptions.ResourceNotFoundException;
@@ -35,11 +36,15 @@ public class ProductServiceTests {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private CategoryRepository categoryRepository;
+
     private long existingId;
     private long nonExistingId;
     private long dependentId;
     private PageImpl<Product> page;
     private Product product;
+    private ProductDTO productDTO;
 
 
     @BeforeEach
@@ -49,6 +54,8 @@ public class ProductServiceTests {
         dependentId = 3L;
 
         product = Factory.createProduct();
+
+        productDTO = Factory.createProductDTO();
 
         page = new PageImpl<>(List.of(product));
 
@@ -63,7 +70,7 @@ public class ProductServiceTests {
         when(productRepository.getReferenceById(existingId)).thenReturn(product);
 
         when(productRepository.getReferenceById(nonExistingId))
-                .thenThrow(new ResourceNotFoundException("Product not found."));
+                .thenThrow(ResourceNotFoundException.class);
 
         doNothing().when(productRepository).deleteById(existingId);
 
@@ -100,12 +107,19 @@ public class ProductServiceTests {
 
     @Test
     public void updateShouldReturnProductDTOWhenIdExists() {
-        ProductDTO productDTO = Factory.createProductDTO();
+        productDTO = Factory.createProductDTO();
+        categoryRepository.getReferenceById(existingId);
         ProductDTO res = productService.update(existingId, productDTO);
         Assertions.assertNotNull(res);
+        verify(productRepository, times(1)).getReferenceById(existingId);
+        verify(categoryRepository, times(1)).getReferenceById(existingId);
     }
     @Test
     public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+           productService.update(nonExistingId, productDTO);
+        });
+        verify(productRepository, times(1)).getReferenceById(nonExistingId);
     }
 
     @Test
