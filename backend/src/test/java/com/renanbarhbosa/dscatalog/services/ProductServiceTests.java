@@ -114,10 +114,11 @@ public class ProductServiceTests {
         verify(productRepository, times(1)).getReferenceById(existingId);
         verify(categoryRepository, times(1)).getReferenceById(existingId);
     }
+
     @Test
     public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-           productService.update(nonExistingId, productDTO);
+            productService.update(nonExistingId, productDTO);
         });
         verify(productRepository, times(1)).getReferenceById(nonExistingId);
     }
