@@ -106,13 +106,11 @@ public class ProductServiceTests {
     }
 
     @Test
-    public void updateShouldReturnProductDTOWhenIdExists() {
-        productDTO = Factory.createProductDTO();
-        categoryRepository.getReferenceById(existingId);
+    public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
         ProductDTO res = productService.update(existingId, productDTO);
         Assertions.assertNotNull(res);
-        verify(productRepository, times(1)).getReferenceById(existingId);
-        verify(categoryRepository, times(1)).getReferenceById(existingId);
+        Assertions.assertEquals(existingId, res.getId());
+        verify(productRepository, times(1)).save(any());
     }
 
     @Test
