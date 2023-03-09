@@ -41,7 +41,7 @@ public class ProductServiceTests {
 
     private long existingId;
     private long nonExistingId;
-    private long dependentId;
+    private long dependantId;
     private PageImpl<Product> page;
     private Product product;
     private ProductDTO productDTO;
@@ -51,7 +51,7 @@ public class ProductServiceTests {
     void setup() throws Exception {
         existingId = 1L;
         nonExistingId = 2L;
-        dependentId = 3L;
+        dependantId = 3L;
 
         product = Factory.createProduct();
 
@@ -78,7 +78,7 @@ public class ProductServiceTests {
                 .when(productRepository).deleteById(nonExistingId);
 
         doThrow(DataIntegrityViolationException.class)
-                .when(productRepository).deleteById(dependentId);
+                .when(productRepository).deleteById(dependantId);
     }
 
     @Test
@@ -142,9 +142,9 @@ public class ProductServiceTests {
     @Test
     public void deleteShouldThrowDatabaseExceptionWhenDependantId() {
         Assertions.assertThrows(DatabaseException.class, () -> {
-            productService.delete(dependentId);
+            productService.delete(dependantId);
         });
         verify(productRepository, times(1))
-                .deleteById(dependentId);
+                .deleteById(dependantId);
     }
 }
