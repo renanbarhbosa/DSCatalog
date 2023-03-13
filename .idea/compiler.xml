@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="dscatalog" target="11" />
+      <module name="dscatalog" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

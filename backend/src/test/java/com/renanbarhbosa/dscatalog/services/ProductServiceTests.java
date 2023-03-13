@@ -1,6 +1,7 @@
 package com.renanbarhbosa.dscatalog.services;
 
 import com.renanbarhbosa.dscatalog.dto.ProductDTO;
+import com.renanbarhbosa.dscatalog.entities.Category;
 import com.renanbarhbosa.dscatalog.entities.Product;
 import com.renanbarhbosa.dscatalog.repositories.CategoryRepository;
 import com.renanbarhbosa.dscatalog.repositories.ProductRepository;
@@ -46,6 +47,8 @@ public class ProductServiceTests {
     private Product product;
     private ProductDTO productDTO;
 
+    private Category category;
+
 
     @BeforeEach
     void setup() throws Exception {
@@ -56,6 +59,8 @@ public class ProductServiceTests {
         product = Factory.createProduct();
 
         productDTO = Factory.createProductDTO();
+
+        category = Factory.createCategory();
 
         page = new PageImpl<>(List.of(product));
 
@@ -70,6 +75,11 @@ public class ProductServiceTests {
         when(productRepository.getReferenceById(existingId)).thenReturn(product);
 
         when(productRepository.getReferenceById(nonExistingId))
+                .thenThrow(ResourceNotFoundException.class);
+
+        when(categoryRepository.getReferenceById(existingId)).thenReturn(category);
+
+        when(categoryRepository.getReferenceById(nonExistingId))
                 .thenThrow(ResourceNotFoundException.class);
 
         doNothing().when(productRepository).deleteById(existingId);
