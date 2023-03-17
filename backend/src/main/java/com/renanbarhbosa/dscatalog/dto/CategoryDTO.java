@@ -1,6 +1,5 @@
 package com.renanbarhbosa.dscatalog.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.renanbarhbosa.dscatalog.entities.Category;
 
 import java.io.Serializable;

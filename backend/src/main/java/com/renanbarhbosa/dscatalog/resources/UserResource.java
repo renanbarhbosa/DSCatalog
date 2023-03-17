@@ -1,9 +1,7 @@
 package com.renanbarhbosa.dscatalog.resources;
 
-import com.renanbarhbosa.dscatalog.dto.ProductDTO;
 import com.renanbarhbosa.dscatalog.dto.UserDTO;
 import com.renanbarhbosa.dscatalog.dto.UserInsertDTO;
-import com.renanbarhbosa.dscatalog.services.ProductService;
 import com.renanbarhbosa.dscatalog.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
