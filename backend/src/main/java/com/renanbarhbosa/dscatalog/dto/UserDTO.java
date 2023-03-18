@@ -1,6 +1,8 @@
 package com.renanbarhbosa.dscatalog.dto;
 
 import com.renanbarhbosa.dscatalog.entities.User;
+import com.renanbarhbosa.dscatalog.services.validation.UserInsertValid;
+import com.renanbarhbosa.dscatalog.services.validation.UserUpdateValid;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
